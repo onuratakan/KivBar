@@ -1,0 +1,43 @@
+RelativeLayout:
+    MDBoxLayout:
+        md_bg_color:"#242728"
+        RelativeLayout:
+            FitImage:
+                pos_hint:{"center_x":0.5,"center_y":0.72}
+                size_hint:0.45,0.45
+                source:"icons/music.png"
+                radius:dp(100)
+            MDBoxLayout:
+                pos_hint:{"center_x":0.5,"center_y":0.4}
+                size_hint:0.85,0.15
+                md_bg_color:"#303341"
+                radius:[dp(10),dp(10),dp(10),dp(10)]
+                MDLabel:
+                    id:text_bar
+                    text:app.ControlMusic().get_current()[:15]+"..."
+                    halign:"center"
+                    short:True
+            MDBoxLayout: 
+                pos_hint:{"center_x":0.5,"center_y":0.18}
+                size_hint:0.85,0.25
+                md_bg_color:"#303341"
+                radius:[dp(10),dp(10),dp(10),dp(10)]
+                AnchorLayout:
+                    MDIconButton:
+                        icon:"skip-previous"
+                        on_press:app.ControlMusic.previous() if ok.icon != "exit-run" else print
+                AnchorLayout:
+                    MDIconButton:
+                        id:ok
+                        icon:app.get_icon(self)
+                        on_press:app.control_music(self) if self.icon != "exit-run" else print
+                AnchorLayout:
+                    MDIconButton:
+                        icon:"skip-next"
+                        on_press:app.ControlMusic.next_play() if ok.icon != "exit-run" else print
+
+
+
+    MDBoxLayout:
+        md_bg_color:"#242728"
+        id:hider

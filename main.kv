@@ -1,0 +1,165 @@
+#:import os os
+
+
+<Icon@MDIconButton+HoverBehavior>:
+
+MDBoxLayout:
+    md_bg_color:"#242728"
+    RelativeLayout:
+        MDCard:
+            id:batter_card
+            pos_hint:{"center_y":0.51,"center_x":0.5}
+            md_bg_color:"#303841"
+            size_hint:0.8,0.08
+            orientation:"vertical"
+            AnchorLayout:
+                Icon:
+                    id:b_icon
+                    icon:"battery-charging-30"
+                    icon_size:"20sp"
+                    theme_icon_color:"Custom"
+                    icon_color:"#1AE51A"
+                    
+            MDLabel:
+                id:battery
+                text:str(app.BatteryInfo.current_battery())+"%"
+                halign:"center"
+                font_size:"15sp"
+  
+        MDCard:
+            id:time_card
+            pos_hint:{"center_y":0.12,"center_x":0.5}
+            size_hint:0.8,0.1
+            md_bg_color:"#303841"
+            radius:dp(5)
+            orientation:"vertical"
+            MDLabel:
+                id:t1
+                text:app.date.split(" ")[0]
+                halign:"center"
+            MDLabel:
+                id:t2
+                text:app.date.split(" ")[-1]
+                halign:"center"          
+
+        AnchorLayout:
+            anchor_y:"top"
+            Icon:
+                icon:app.icon
+                ripple_scale:0
+                theme_icon_color:"Custom"
+                icon_color:"#88BD9A"
+                icon_size:"30dp"
+                on_press:app.launcher()
+
+        MDCard:
+            pos_hint:{"center_y":0.8,"center_x":0.5}
+            size_hint:0.8,0.25
+            md_bg_color:"#303841"
+            orientation:"vertical" 
+            AnchorLayout:
+                MDIconButton:
+                    icon:"icons/featurepoints.png"
+                    theme_icon_color:"Custom"
+                    icon_size:"20dp"
+            AnchorLayout:
+                MDIconButton:
+                    icon:"circle-outline"
+                    icon_color:"#E4CFE6"
+                    theme_icon_color:"Custom"
+                    icon_size:"15dp"
+            AnchorLayout:
+                MDIconButton:
+                    icon:"circle-outline"
+                    icon_color:"#E4CFE6"
+                    theme_icon_color:"Custom"
+                    icon_size:"15dp"
+            AnchorLayout:
+                MDIconButton:
+                    icon:"circle-outline"
+                    icon_color:"#E4CFE6"
+                    theme_icon_color:"Custom"
+                    icon_size:"15dp"
+        MDCard:
+            id:_card
+            pos_hint:{"center_y":0.32,"center_x":0.5}
+            size_hint:0.8,0.25
+            md_bg_color:"#303841"
+            orientation:"vertical"
+            AnchorLayout:
+                Icon:
+                    icon:"icons/infowidgets.png"
+                    ripple_scale:0
+                    theme_icon_color:"Custom"
+                    icon_color:"#FF4971"
+                    icon_size:"30dp"
+                    on_enter:os.system("python3 window_creator.py 95 410 info.kv 200 200")
+                    on_press:os.system("python3 window_creator.py 95 410 info.kv 200 200")
+
+            AnchorLayout:
+                Icon:
+                    icon:"icons/music.png"
+                    ripple_scale:0
+                    theme_icon_color:"Custom"
+                    icon_color:"#B2A6EE"
+                    icon_size:"30dp"
+                    on_enter:os.system("python3 window_creator.py 95 410 music.kv 200 200")
+                    on_press:os.system("python3 window_creator.py 95 410 music.kv 200 200")
+            AnchorLayout:
+                Icon:
+                    icon:"icons/pac_man.png"
+                    ripple_scale:0
+                    theme_icon_color:"Custom"
+                    icon_color:"#FECF7F"
+                    icon_size:"30dp"
+            AnchorLayout:
+                Icon:
+                    icon:"icons/wifi.png"
+                    ripple_scale:0
+                    theme_icon_color:"Custom"
+                    icon_color:"#FECF7F"
+                    icon_size:"30dp"
+
+        AnchorLayout:
+            anchor_y:"bottom"
+            Icon:
+                icon:"power"
+                siz_hint:None,None 
+                size:dp(50),dp(50)
+                ripple_scale:0
+                theme_icon_color:"Custom"
+                icon_color:"#FF4971"
+                on_enter:app.animateBarPowerbutton()
+                on_press:app.animateBarPowerbutton()
+                
+        MDBoxLayout:
+            id:power_box
+            pos_hint:{"center_y":-1,"center_x":0.5}
+            orientation:"vertical"
+            adaptive_height:True
+            spacing:dp(30)
+            AnchorLayout:
+                Icon:
+                    icon:"power"
+                    ripple_scale:0
+                    theme_icon_color:"Custom"
+                    icon_color:"#FF4971"
+                    on_press:app.powermenu()
+            AnchorLayout:
+                Icon:
+                    icon:"restart"
+                    ripple_scale:0
+                    theme_icon_color:"Custom"
+                    icon_color:"#B2A6EE"
+            AnchorLayout:
+                Icon:
+                    icon:"logout"
+                    ripple_scale:0
+                    theme_icon_color:"Custom"
+                    icon_color:"#FECF7F"
+                    icon_size:"18sp"
+            AnchorLayout:
+                MDBoxLayout:    
+                    md_bg_color:"#303841"
+                    size_hint_y:None 
+                    size:dp(1),dp(1)
