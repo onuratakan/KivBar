@@ -1,6 +1,8 @@
 # KivBar
 *A **taskbar** bar made in kivy*
 
+#### WARNING : This project is still in development
+
 > ![image 1](https://user-images.githubusercontent.com/68729523/190897762-8a78bbd1-3926-4100-8932-f5a1e451ee42.png)
 > _Preview in bspwm_. Wallpaper at [HERE](https://cdna.artstation.com/p/assets/images/images/014/306/200/large/c-home-akalil.jpg?1543420107)
 
