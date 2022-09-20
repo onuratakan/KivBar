@@ -1,3 +1,4 @@
 run = "exec ~/.config/rofi/scripts/launcher_t2"
-powermenu =  "exec ~/.config/rofi/scripts/powermenu_t1"
+default_font = "fonts/Iosevka Nerd Font Complete.ttf"
 icon = "ubuntu"
+session = "bspwm" # required for logout

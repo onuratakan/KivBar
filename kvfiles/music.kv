@@ -14,9 +14,11 @@ RelativeLayout:
                 radius:[dp(10),dp(10),dp(10),dp(10)]
                 MDLabel:
                     id:text_bar
+                    font_size:"15sp"
                     text:app.ControlMusic().get_current()[:15]+"..."
                     halign:"center"
                     short:True
+                    font_name:app.font
             MDBoxLayout: 
                 pos_hint:{"center_x":0.5,"center_y":0.18}
                 size_hint:0.85,0.25

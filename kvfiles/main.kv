@@ -3,6 +3,14 @@
 
 <Icon@MDIconButton+HoverBehavior>:
 
+<DI>:
+    icon:""
+    MDIconButton:
+        icon:root.icon
+        icon_color:"#E4CFE6"
+        theme_icon_color:"Custom"
+        icon_size:"15dp"
+
 MDBoxLayout:
     md_bg_color:"#242728"
     RelativeLayout:
@@ -25,6 +33,7 @@ MDBoxLayout:
                 text:str(app.BatteryInfo.current_battery())+"%"
                 halign:"center"
                 font_size:"15sp"
+                font_name:app.font
   
         MDCard:
             id:time_card
@@ -37,10 +46,12 @@ MDBoxLayout:
                 id:t1
                 text:app.date.split(" ")[0]
                 halign:"center"
+                font_name:app.font
             MDLabel:
                 id:t2
                 text:app.date.split(" ")[-1]
-                halign:"center"          
+                halign:"center"   
+                font_name:app.font
 
         AnchorLayout:
             anchor_y:"top"
@@ -53,33 +64,12 @@ MDBoxLayout:
                 on_press:app.launcher()
 
         MDCard:
+            id:d_card
             pos_hint:{"center_y":0.8,"center_x":0.5}
             size_hint:0.8,0.25
             md_bg_color:"#303841"
             orientation:"vertical" 
-            AnchorLayout:
-                MDIconButton:
-                    icon:"icons/featurepoints.png"
-                    theme_icon_color:"Custom"
-                    icon_size:"20dp"
-            AnchorLayout:
-                MDIconButton:
-                    icon:"circle-outline"
-                    icon_color:"#E4CFE6"
-                    theme_icon_color:"Custom"
-                    icon_size:"15dp"
-            AnchorLayout:
-                MDIconButton:
-                    icon:"circle-outline"
-                    icon_color:"#E4CFE6"
-                    theme_icon_color:"Custom"
-                    icon_size:"15dp"
-            AnchorLayout:
-                MDIconButton:
-                    icon:"circle-outline"
-                    icon_color:"#E4CFE6"
-                    theme_icon_color:"Custom"
-                    icon_size:"15dp"
+
         MDCard:
             id:_card
             pos_hint:{"center_y":0.32,"center_x":0.5}
@@ -93,8 +83,7 @@ MDBoxLayout:
                     theme_icon_color:"Custom"
                     icon_color:"#FF4971"
                     icon_size:"30dp"
-                    on_enter:os.system("python3 window_creator.py 95 410 info.kv 200 200")
-                    on_press:os.system("python3 window_creator.py 95 410 info.kv 200 200")
+                    on_press:os.system("python3 window_creator.py 95 410 ./kvfiles/info.kv 200 200")
 
             AnchorLayout:
                 Icon:
@@ -103,8 +92,7 @@ MDBoxLayout:
                     theme_icon_color:"Custom"
                     icon_color:"#B2A6EE"
                     icon_size:"30dp"
-                    on_enter:os.system("python3 window_creator.py 95 410 music.kv 200 200")
-                    on_press:os.system("python3 window_creator.py 95 410 music.kv 200 200")
+                    on_press:os.system("python3 window_creator.py 95 430 ./kvfiles/music.kv 200 200")
             AnchorLayout:
                 Icon:
                     icon:"icons/pac_man.png"
@@ -112,6 +100,7 @@ MDBoxLayout:
                     theme_icon_color:"Custom"
                     icon_color:"#FECF7F"
                     icon_size:"30dp"
+                    on_press:os.system("python3 window_creator.py 95 450 ./kvfiles/my_menu.kv 200 200")
             AnchorLayout:
                 Icon:
                     icon:"icons/wifi.png"
@@ -119,6 +108,8 @@ MDBoxLayout:
                     theme_icon_color:"Custom"
                     icon_color:"#FECF7F"
                     icon_size:"30dp"
+                    on_press:os.system("cd wifimenu && python3 wifimenu.py && cd ..")
+  
 
         AnchorLayout:
             anchor_y:"bottom"
@@ -130,7 +121,7 @@ MDBoxLayout:
                 theme_icon_color:"Custom"
                 icon_color:"#FF4971"
                 on_enter:app.animateBarPowerbutton()
-                on_press:app.animateBarPowerbutton()
+                on_press:os.system("systemctl poweroff")
                 
         MDBoxLayout:
             id:power_box
@@ -140,17 +131,18 @@ MDBoxLayout:
             spacing:dp(30)
             AnchorLayout:
                 Icon:
-                    icon:"power"
+                    icon:"power-sleep"
                     ripple_scale:0
                     theme_icon_color:"Custom"
                     icon_color:"#FF4971"
-                    on_press:app.powermenu()
+                    on_press:os.system("mpc -q pause && amixer set Master mute && betterlockscreen -l dimblur --display 1 --span -s")
             AnchorLayout:
                 Icon:
                     icon:"restart"
                     ripple_scale:0
                     theme_icon_color:"Custom"
                     icon_color:"#B2A6EE"
+                    on_press:os.system("systemctl reboot")
             AnchorLayout:
                 Icon:
                     icon:"logout"
@@ -158,6 +150,7 @@ MDBoxLayout:
                     theme_icon_color:"Custom"
                     icon_color:"#FECF7F"
                     icon_size:"18sp"
+                    on_press:os.system("pkill {}".format(app.session))
             AnchorLayout:
                 MDBoxLayout:    
                     md_bg_color:"#303841"

@@ -3,6 +3,7 @@ from kivy.config import Config
 from kivy.lang import Builder
 from kivy.metrics import dp
 import sys
+import launch 
 
 Config.set("graphics","borderless","1")
 Config.set("graphics","position","custom")
@@ -22,6 +23,7 @@ class WindowRoot(MDApp):
     BrightNessInfo = BrightNessInfo
     ControlSound = ControlSound
     ControlMusic = ControlMusic
+    font = launch.default_font
 
     def build(self):
         self.theme_cls.theme_style = "Dark"
@@ -35,7 +37,7 @@ class WindowRoot(MDApp):
         anim = lambda *largs : Animation(opacity=0,d=1).start(self.root.ids.hider)
         Clock.schedule_once(anim,1)
         Window.on_cursor_enter = lambda *largs : Clock.schedule_once(self.on_pre_start)
-        if sys.argv[3] == "music.kv":
+        if sys.argv[3].split("/")[-1] == "music.kv":
             Clock.schedule_interval(self.loopSong,0)
 
     def control_music(self,instance):
@@ -61,7 +63,7 @@ class WindowRoot(MDApp):
             else:
                 return "play"
         else:
-            return  "exit-run"
+            return  "stop-circle-outline"
 
 
 WindowRoot().run()

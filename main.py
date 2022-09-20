@@ -14,15 +14,21 @@ from kivy.animation import  Animation
 from kivy.clock import Clock
 from kivymd.app import MDApp
 from kivymd.uix.behaviors import *
+from kivy.uix.anchorlayout import AnchorLayout
 from PIL import ImageGrab 
 import datetime
 import shutil
 import os
 import launch
 
+class DI(AnchorLayout):
+    
+    pass
+
+
 class ControlSound():
 
-    # PulseAudio is required
+    # PulseAudio is require:w
 
     get_volume = lambda : os.popen("pactl get-sink-volume 0 ").read().split("/")[1]
     increase_volume = lambda volume : os.system("pactl set-sink-volume 0 {}".format(volume))
@@ -46,12 +52,13 @@ class BrightNessInfo():
 
 
 class ControlMusic():
-   #Ncmpcpp, mpd, mpc and kunst are required
+   
+    #Ncmpcpp, mpd and mpc are required
     
-    play = lambda *largs : os.system("mpc -q toggle && kunst --size 60x60 --silent ")
+    play = lambda *largs : os.system("mpc -q toggle")
     stop = lambda *largs : os.system("mpc -q pause")
-    previous = lambda *largs : os.system("mpc -q prev && kunst --size 60x60 --silent")
-    next_play = lambda *largs : os.system("mpc -q next && kunst --size 60x60 --silent")
+    previous = lambda *largs : os.system("mpc -q prev")
+    next_play = lambda *largs : os.system("mpc -q next")
 
     def get_current(self):
         music = os.popen("mpc -f %title% current").read().replace("\n","")
@@ -62,23 +69,26 @@ class ControlMusic():
 
 
 def roundBattery(battery):
-    if len(str(battery)) == 2 and int(str(battery)[:-1]) != 0 and battery < 91:
-        return battery+(10-int(str(battery)[-1:]))
-
+    if len(str(battery)) == 2 and int(str(battery)[:-1]) != 0 and battery < 99:
+        return int(str(battery)[:-1]+"0")
     if len(str(battery)) == 3:
-        return battery
+        return "high"
     else:
-        return ""
+        return "low"
 
 
-class SideBar(MDApp):
+class KivBar(MDApp):
 
     screen_size = ImageGrab.grab().size
     bar_size = dp(50),screen_size[1]-screen_size[1]//10
 
     launcher = lambda *largs : os.system(launch.run)
-    powermenu = lambda *largs : os.system(launch.powermenu)
+    
     icon = launch.icon
+    font = launch.default_font
+    session = launch.session
+
+    desktops = lambda *largs : os.popen("wmctrl -d").read().split("\n")[:-1]
 
     BatteryInfo = BatteryInfo
 
@@ -87,10 +97,20 @@ class SideBar(MDApp):
 
         self.date = datetime.datetime.now().strftime("%H %M")
         self.theme_cls.theme_style = "Dark"
-        self.bar = Builder.load_file("main.kv")
+        self.bar = Builder.load_file("kvfiles/main.kv")
         Window.size = self.bar_size
         Window.on_cursor_leave = lambda *largs : self.animateBarPowerbutton(do=False)
         return self.bar
+
+    def add_desktop_widgets(self,arg):
+
+
+        for count,i in enumerate(self.desktops()):
+
+            widget = DI()
+            widget.icon = "circle-outline" if "*" not in i else "icons/featurepoints.png"
+
+            self.root.ids.d_card.add_widget(widget)
 
 
     def update_time(self,arg):  
@@ -107,7 +127,7 @@ class SideBar(MDApp):
         self.bar.ids.battery.text  = str(current)+"%"
 
         if "Not" in status or "Discharging" in status:
-            self.bar.ids.b_icon.icon = "battery-"+str(roundBattery(current)) if str(roundBattery(current)) != "" else "battery"
+            self.bar.ids.b_icon.icon = "battery-"+str(roundBattery(current))
             self.bar.ids.b_icon.icon_color = "#BDE51A"
         else:
            self.bar.ids.b_icon.icon = "battery-charging-"+str((roundBattery(current)))
@@ -116,21 +136,24 @@ class SideBar(MDApp):
 
     def on_start(self):
 
+        Clock.schedule_once(self.add_desktop_widgets,0)
         Clock.schedule_interval(self.update_time,0)
         Clock.schedule_interval(self.update_battery,0)
+
         
         
 
     def animateBarPowerbutton(self,do=True):
+
         if self.bar.ids.power_box.pos_hint == {"center_y":-1,"center_x":0.5} and do == True:
-            Animation(pos_hint={"center_y":0.14,"center_x":0.5},d=0.3,t="in_out_bounce").start(self.bar.ids.power_box)
-            Animation(pos_hint={"center_y":0.3,"center_x":0.5},d=0.3,t="in_out_bounce").start(self.bar.ids.time_card)
-            Animation(pos_hint={"center_y":0.5,"center_x":0.5},d=0.3,t="in_out_bounce").start(self.bar.ids._card)
+            Animation(pos_hint={"center_y":0.14,"center_x":0.5},opacity=1,d=0.3,t="in_out_bounce").start(self.bar.ids.power_box)
+            Animation(pos_hint={"center_y":0.3,"center_x":0.5},d=0.2,t="in_out_bounce").start(self.bar.ids.time_card)
+            Animation(pos_hint={"center_y":0.5,"center_x":0.5},d=0.1,t="in_out_bounce").start(self.bar.ids._card)
         else: 
-            Animation(pos_hint={"center_y":-1,"center_x":0.5},d=0.2,t="in_out_bounce").start(self.bar.ids.power_box)
+            Animation(pos_hint={"center_y":-1,"center_x":0.5},opacity=0,d=0.1,t="in_out_bounce").start(self.bar.ids.power_box)
             Animation(pos_hint={"center_y":0.12,"center_x":0.5},d=0.2,t="in_out_bounce").start(self.bar.ids.time_card)     
-            Animation(pos_hint={"center_y":0.32,"center_x":0.5},d=0.2,t="in_out_bounce").start(self.bar.ids._card)
+            Animation(pos_hint={"center_y":0.32,"center_x":0.5},d=0.3,t="in_out_bounce").start(self.bar.ids._card)
 
 
 if __name__ == "__main__":
-    SideBar().run()
+    KivBar().run()
