@@ -1,5 +1,5 @@
 #:import os os
-
+#:import Clock kivy.clock.Clock
 
 <Icon@MDIconButton+HoverBehavior>:
 
@@ -120,7 +120,7 @@ MDBoxLayout:
                 ripple_scale:0
                 theme_icon_color:"Custom"
                 icon_color:"#FF4971"
-                on_enter:app.animateBarPowerbutton()
+                on_enter:Clock.schedule_once(lambda *largs : app.animateBarPowerbutton(),0.3)
                 on_press:os.system("systemctl poweroff")
                 
         MDBoxLayout:

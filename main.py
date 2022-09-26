@@ -48,7 +48,7 @@ class BrightNessInfo():
     current_brightness = lambda self,*largs : int(open(self.backlight+"/brightness","r").read()) 
     max_brightness = lambda self,*largs : int(open(self.backlight+"/max_brightness","r").read())
 
-    change_brightness = lambda self,value,*largs : os.system("echo {} > /sys/class/backlight/intel_backlight/brightness".format(value))
+    change_brightness = lambda self,value,*largs : os.system("echo {} > {}".format(value,self.backlight+"/brightness"))
 
 
 class ControlMusic():
@@ -69,7 +69,7 @@ class ControlMusic():
 
 
 def roundBattery(battery):
-    if len(str(battery)) == 2 and int(str(battery)[:-1]) != 0 and battery < 99:
+    if len(str(battery)) == 2 and int(str(battery)[:-1]) != 0 and battery < 100:
         return int(str(battery)[:-1]+"0")
     if len(str(battery)) == 3:
         return "high"
@@ -91,6 +91,7 @@ class KivBar(MDApp):
     desktops = lambda *largs : os.popen("wmctrl -d").read().split("\n")[:-1]
 
     BatteryInfo = BatteryInfo
+    animating = False
 
 
     def build(self):
@@ -100,6 +101,7 @@ class KivBar(MDApp):
         self.bar = Builder.load_file("kvfiles/main.kv")
         Window.size = self.bar_size
         Window.on_cursor_leave = lambda *largs : self.animateBarPowerbutton(do=False)
+        Window.on_close_request = lambda *largs : print
         return self.bar
 
     def add_desktop_widgets(self,arg):
@@ -108,7 +110,7 @@ class KivBar(MDApp):
         for count,i in enumerate(self.desktops()):
 
             widget = DI()
-            widget.icon = "circle-outline" if "*" not in i else "icons/featurepoints.png"
+            widget.icon = "circle-outline" if "*" not in i else "circle"
 
             self.root.ids.d_card.add_widget(widget)
 
@@ -145,15 +147,19 @@ class KivBar(MDApp):
 
     def animateBarPowerbutton(self,do=True):
 
-        if self.bar.ids.power_box.pos_hint == {"center_y":-1,"center_x":0.5} and do == True:
+        if self.bar.ids.power_box.pos_hint  == {"center_y":-1,"center_x":0.5} and do == True and self.animating == False:
             Animation(pos_hint={"center_y":0.14,"center_x":0.5},opacity=1,d=0.3,t="in_out_bounce").start(self.bar.ids.power_box)
             Animation(pos_hint={"center_y":0.3,"center_x":0.5},d=0.2,t="in_out_bounce").start(self.bar.ids.time_card)
             Animation(pos_hint={"center_y":0.5,"center_x":0.5},d=0.1,t="in_out_bounce").start(self.bar.ids._card)
-        else: 
+            self.animating = True
+        else:
+            self.animating = True
             Animation(pos_hint={"center_y":-1,"center_x":0.5},opacity=0,d=0.1,t="in_out_bounce").start(self.bar.ids.power_box)
             Animation(pos_hint={"center_y":0.12,"center_x":0.5},d=0.2,t="in_out_bounce").start(self.bar.ids.time_card)     
             Animation(pos_hint={"center_y":0.32,"center_x":0.5},d=0.3,t="in_out_bounce").start(self.bar.ids._card)
-
+            def fix(*largs):
+                self.animating = False 
+            Clock.schedule_once(fix,0.3)
 
 if __name__ == "__main__":
     KivBar().run()
