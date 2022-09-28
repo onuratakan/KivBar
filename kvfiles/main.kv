@@ -7,9 +7,11 @@
     icon:""
     MDIconButton:
         icon:root.icon
+        ripple_scale:0
         icon_color:"#E4CFE6"
         theme_icon_color:"Custom"
         icon_size:"15dp"
+        on_press:os.system("wmctrl -s {}".format(root.count))
 
 MDBoxLayout:
     md_bg_color:"#242728"

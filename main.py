@@ -111,8 +111,23 @@ class KivBar(MDApp):
 
             widget = DI()
             widget.icon = "circle-outline" if "*" not in i else "circle"
+            widget.count = count
+            print(widget.count)
 
             self.root.ids.d_card.add_widget(widget)
+
+    def update_current_desktop(self,arg):
+
+        for count,desktop in enumerate(self.desktops()):
+            if "*" in desktop:
+                self.current_desktop = count
+
+        for count,widget in enumerate(self.root.ids.d_card.children[::-1]):
+            if count == self.current_desktop:
+                widget.icon = "circle"
+            else:
+                widget.icon = "circle-outline"
+    
 
 
     def update_time(self,arg):  
@@ -141,8 +156,7 @@ class KivBar(MDApp):
         Clock.schedule_once(self.add_desktop_widgets,0)
         Clock.schedule_interval(self.update_time,0)
         Clock.schedule_interval(self.update_battery,0)
-
-        
+        Clock.schedule_interval(self.update_current_desktop,0)
         
 
     def animateBarPowerbutton(self,do=True):
