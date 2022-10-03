@@ -92,7 +92,7 @@ class KivBar(MDApp):
 
     BatteryInfo = BatteryInfo
     animating = False
-
+    title = "KivBar"
 
     def build(self):
 
@@ -153,6 +153,9 @@ class KivBar(MDApp):
 
     def on_start(self):
 
+        cmd = ("sh -c 'sleep 2 && wmctrl -b add,sticky,skip_taskbar,above -r {}' &".format(self.title))
+        print(cmd)
+        os.system(cmd)
         Clock.schedule_once(self.add_desktop_widgets,0)
         Clock.schedule_interval(self.update_time,0)
         Clock.schedule_interval(self.update_battery,0)
